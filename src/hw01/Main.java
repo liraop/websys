@@ -39,7 +39,7 @@ public class Main {
 	}
 	
 	private static void removeItemsMenu() {
-		System.out.println("Remove items menu.\n Input (1) to remove one item (2) to remove all the same items\n(4) to clean the inventory (0) to go back");
+		System.out.println("Remove items menu.\n Input (1) to remove one item (2) to clean the inventory (0) to go back");
 	
 		int d = 0;
 		
@@ -50,7 +50,7 @@ public class Main {
 				break;
 		case 1: removeItem();
 				break;
-		case 2: removeItemQ();
+		case 2: cleanInv();
 				break;
 		default : System.out.println("Invalid Input. Please select a valid one.\n");
 					addItemsMenu();
@@ -58,14 +58,26 @@ public class Main {
 		
 	}
 
-	private static void removeItemQ() {
-		// TODO Auto-generated method stub
-		
+	private static void cleanInv() {
+		inv.cleanInv();
+		System.out.println("\nINVENTORY IS NOW EMPTY!!!\n");
+		menu();
 	}
 
 	private static void removeItem() {
-		// TODO Auto-generated method stub
+		int id = 0;
+		System.out.println("\nInsert the item ID to be removed:\n");
+		id = testInput(is,"rim");
 		
+		try {
+			inv.remove(id);
+			System.out.println("\n ITEM SUCCESSFULLY REMOVED!!!\n");
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+		
+		removeItemsMenu();
+			
 	}
 
 	private static void showInventory(){
@@ -74,7 +86,7 @@ public class Main {
 	}
 	
 	private static void addItemsMenu(){
-		System.out.println("Add items menu.\n Input (1) to add one item (2) to add a item with quantity (0) to go back");
+		System.out.println("Add items menu.\n Input (1) to add one item (0) to go back");
 		
 		int d = 0;
 		
@@ -85,31 +97,35 @@ public class Main {
 				break;
 		case 1: addItemQ(d);
 				break;
-		case 2: addItemQ(d);
-				break;
 		default : System.out.println("Invalid Input. Please select a valid one.\n");
 				addItemsMenu();
 		}
 	}
 
 	private static void addItemQ(int opt) {
-		int q = 1;
+		System.out.println("Item ID:\n");
+		int id = is.nextInt();
+		
+		if (inv.containsItem(id)){
+			System.out.println("\nItem already on inventory!!!");
+			addItemsMenu();
+		}
+		
 		System.out.println("Name of the item:\n");
 		String name = is.next();
 		System.out.println("Description of the item:\n");
 		String desc = is.next();
-		if (opt == 2){
-			System.out.println("Quantity:");
-			q = is.nextInt();
-		} 
+		System.out.println("Weight of the item:\n");
+		float wgt = testWeight(is,"adim");
 
+		
 		try{
-			inv.add(new Item(name,desc), q);
+			inv.add(new Item(id,name,desc,wgt));
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 		}
 		
-		System.out.println("\n ITEM SUCCESSFULLY ADDED!!!\n");
+		System.out.println("\nITEM SUCCESSFULLY ADDED!!!\n");
 		addItemsMenu();
 	}
 
@@ -120,6 +136,24 @@ public class Main {
 			in = is.nextInt();	
 		} else {
 			System.out.println("\nPlease: USE INTEGERS!!!!!!\n");
+			is.next();
+			
+			switch (method){
+			case "menu": menu(); break;
+			case "adim": addItemsMenu(); break;
+			case "rim": removeItemsMenu(); break;
+			}
+		}
+		return in;
+	}
+	
+	private static float testWeight(Scanner is, String method){
+		float in = 0;
+		
+		if (is.hasNextFloat()){
+			in = is.nextFloat();	
+		} else {
+			System.out.println("\nPlease: USE FLOAT FOR WEIGHT!!!!!!\n");
 			is.next();
 			
 			switch (method){

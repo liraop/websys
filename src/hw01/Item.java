@@ -4,23 +4,22 @@ public class Item {
 
 	private String name;
 	private String description;
-	private int id;
-	private int quantity;
-	
+	private float weight;
+	private int id;	
 
-	public Item(String name, String description) throws Exception{
+	public Item(int id, String name, String description, float weight) throws Exception{
 		setName(name);
 		setDescription(description);
-		setId();
-		this.quantity = 1;
+		setWeight(weight);
+		setId(id);
 	}
 	
-	public void setQuantity(int i) {
-		this.quantity += i;
+	private void setId(int id) {
+		this.id = id;
 	}
 	
-	public int getQuantity(){
-		return this.quantity;
+	private void setWeight(float weight) {
+		this.weight = weight;
 	}
 
 	@Override
@@ -58,13 +57,13 @@ public class Item {
 	public int getId() {
 		return id;
 	}
-
-	private void setId() {
-		this.id = this.hashCode();
-	}
 	
 	@Override
 	public String toString(){
-		return "Item ID: "+getId()+"\nItem name: "+getName()+"\nQuantity: "+getQuantity()+"\nItem description: "+getDescription()+"\n";		
+		return "\nItem ID:"+getId()+"\nItem name: "+getName()+"\nItem weight: "+getWeight()+"\nItem description: "+getDescription()+"\n";		
+	}
+
+	private float getWeight() {
+		return this.weight;
 	}
 }
