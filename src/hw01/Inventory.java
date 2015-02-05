@@ -4,6 +4,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
+/**
+ * Class to represent an simple inventory implementation.
+ * Basic functions implemented such as add, remove, search(contains) and to string. 
+ * @author Pedro de Oliveira Lira - pdeolive@syr.edu
+ *
+ */
 public class Inventory {
 
 	private Map<Integer,Item> inventory;
@@ -14,45 +21,30 @@ public class Inventory {
 	
 	
 	/**
-	 * method to add q number of i item to the inventory 
+	 * method to add an i item to the inventory 
 	 * @param i
 	 * @param q
-	 * @exception IllegalArgumentException - q > 0 and not null. i not null. 
+	 * @exception IllegalArgumentException - i not null; i ID already on inventory.
 	 * @return True if successfully added. 
 	 */
-	public boolean add( Item i, Integer q) throws IllegalArgumentException{
-		if ( q == null || q == 0){
-			throw new IllegalArgumentException();
-		}
-		
+	public boolean add( Item i) throws IllegalArgumentException{
 		if (i == null){
 			throw new IllegalArgumentException();
 		}
 		
-		
 		if (inventory.containsKey(i.getId())){
-			inventory.get(i).setQuantity(q);;
-		} else {
-			inventory.put(i.getId(),i);
+			throw new IllegalArgumentException();
 		}
+	
+		inventory.put(i.getId(),i);
+		
 		return true;
 	}
 	
-	/**
-	 * method to add an item to inventory
-	 * @param Item i
-	 * @return True if successfully added. 
-	 */
-	public boolean add(Item i) throws IllegalArgumentException{
-		try {
-			this.add(i,1);
-			return true;
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-	
 
+	/**
+	 * Method to clean up the entire inventory. 
+	 */
 	public void cleanInv(){
 		inventory.clear();
 	}
@@ -61,22 +53,32 @@ public class Inventory {
 	 * method to remove an item by its ID. 
 	 * 
 	 * @param id
+	 * @throws IllegalArgumentException - If there is no item on the Inventory with this ID.
 	 * @return
 	 */
-	public boolean remove(String id){
+	public boolean remove(int id) throws IllegalArgumentException{
+		if (!inventory.containsKey(id)){
+			throw new IllegalArgumentException();
+		}
+		
+		inventory.remove(id);
 		return true;
 	}
 	
+	/*
+	 * Method to check if an item exists by an ID.
+	 */
+	public boolean containsItem(int itemID){
+		return inventory.containsKey(itemID) ? true : false;
+	}
 	
 	@Override
 	public String toString(){
 		String toStr = "==========--------The inventary-------==========\n";
 		
-		Iterator it = inventory.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        toStr = pairs.getValue() + "\n";
-	        it.remove(); // avoids a ConcurrentModificationException
+		Iterator it = inventory.keySet().iterator();
+	    for (Integer id : inventory.keySet()){
+	        toStr += inventory.get(id).toString() + "\n";
 		    toStr += "\n==========----------------------------==========";
 	    }
 	    return toStr;
