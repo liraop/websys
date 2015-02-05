@@ -2,6 +2,13 @@ package hw01;
 
 import java.util.Scanner;
 
+/**
+ * Class to handle I/O.
+ * The user can add, remove and list items in a inventory.
+ * User inputs are sanitized. 
+ * @author Pedro de Oliveira Lira - pdeolive@syr.edu
+ *
+ */
 public class Main {
 
 	private static Inventory inv;
@@ -73,7 +80,7 @@ public class Main {
 			inv.remove(id);
 			System.out.println("\n ITEM SUCCESSFULLY REMOVED!!!\n");
 		} catch (Exception e){
-			System.out.println(e.getMessage());
+			System.out.println("\n ITEM NOT SUCCESSFULLY REMOVED!!!\nWrong ID or item already out of inventory.\n");
 		}
 		
 		removeItemsMenu();

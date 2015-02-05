@@ -1,5 +1,11 @@
 package hw01;
 
+/**
+ * Class to represent an Item.
+ * Basically getters and setters for its atributes are implemented.
+ * @author Pedro de Oliveira Lira - pdeolive@syr.edu
+ *
+ */
 public class Item {
 
 	private String name;
