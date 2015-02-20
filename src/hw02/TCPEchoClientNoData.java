@@ -12,29 +12,32 @@ import java.io.OutputStream;
  * because on the previous version of the server (non-threaded)
  * just one client could connect at time. 
  * 
+ * 
  * @author Pedro de Oliveira Lira - pdeolive@syr.edu
  *
  */
 public class TCPEchoClientNoData {
 
-  public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
-    if ((args.length < 2) || (args.length > 3)) 
-      throw new IllegalArgumentException("Parameter(s): <Server> <Word> [<Port>]");
+		if ((args.length < 2) || (args.length > 3)) 
+			throw new IllegalArgumentException("Parameter(s): <Server> <Word> [<Port>]");
 
-    String server = args[0];
-   
-    byte[] data = args[1].getBytes();
+		String server = args[0];
 
-    int servPort = (args.length == 3) ? Integer.parseInt(args[2]) : 7;
+		byte[] data = args[1].getBytes();
 
-   
-    Socket socket = new Socket(server, servPort);
+		int servPort = (args.length == 3) ? Integer.parseInt(args[2]) : 7;
 
-    System.out.println("Connected to server...sending echo string");
-    
-    while(true){
-    	
-    }
-  }
+
+		Socket socket = new Socket(server, servPort);
+
+		System.out.println("Connected to server...sending echo string");
+
+	    InputStream in = socket.getInputStream();
+
+	    while (!(in.read(data,0,1) == -1)){
+	    	
+	    }
+	}
 }

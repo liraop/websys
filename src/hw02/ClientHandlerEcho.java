@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
 
 
 
@@ -19,32 +20,41 @@ import java.net.SocketAddress;
 public class ClientHandlerEcho extends Thread{	
 	private Socket client;
 	private int BUFSIZE = 32;
-	
+
 	public ClientHandlerEcho (Socket c){
 		this.client = c;
 	}
-	
+
 	public void run(){
 		int recvMsgSize;   // Size of received message
-	    byte[] receiveBuf = new byte[BUFSIZE];  // Receive buffer
+		byte[] receiveBuf = new byte[BUFSIZE];  // Receive buffer
 
+		// important try-catch for reliability. 
+		// prevent server of crashing when
+		// client sends "out-of-time" data. 
 		try {
-		SocketAddress clientAddress = client.getRemoteSocketAddress();
-		System.out.println("Handling client at " + clientAddress);
+			this.client.setSoTimeout(5*1000);
 
-		InputStream in = client.getInputStream();
-		OutputStream out = client.getOutputStream();
+			SocketAddress clientAddress = client.getRemoteSocketAddress();
+			System.out.println("Handling client at " + clientAddress);
 
-		// Receive until client closes connection, indicated by -1 return
-		while ((recvMsgSize = in.read(receiveBuf)) != -1) {
-		   out.write(receiveBuf, 0, recvMsgSize);
-		}
-		
-	      client.close();  // Close the socket.  We are done with this client!
+			InputStream in = client.getInputStream();
+			OutputStream out = client.getOutputStream();
+
+			// Receive until client closes connection, indicated by -1 return
+			while ((recvMsgSize = in.read(receiveBuf)) != -1) {
+				out.write(receiveBuf, 0, recvMsgSize);
+			}
+
 		} catch (IOException e){
 			System.out.println(e.getMessage());
-		}
+			System.out.println("Closing "+ client.getRemoteSocketAddress()+" connection");
+		} finally {
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}		
 	}
-		
-	
 }

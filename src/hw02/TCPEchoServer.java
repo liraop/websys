@@ -16,6 +16,22 @@ import java.io.*;   // for IOException and Input/OutputStream
  *  without degrading other client's service. 
  *  
  *  The threaded server also solves this problem. 
+ * 
+ *  The third problem is when a client sends data
+ *  and right after closes the socket. The server
+ *  needs to be prepare for situations like this.
+ *  Surrounding the out.write with try-catch
+ *  the server is protected from crashing. 
+ *  
+ *  The forth problem is a client that connects
+ *  but sends no data. The server should be able to
+ *  provide good service and spending resources 
+ *  with a client that is not sending data 
+ *  is not acceptable. 
+ *  For prevent this error, the server now
+ *  have a timeout. If a client takes too long 
+ *  to send the message, the server closes its 
+ *  connection. 
  *  
  * 
  * @author Pedro de Oliveira Lira - pdeolive@syr.edu
